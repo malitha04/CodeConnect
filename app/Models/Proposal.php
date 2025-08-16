@@ -10,20 +10,50 @@ class Proposal extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'project_id',
-        'developer_id',
         'cover_letter',
         'bid_amount',
+        'status',
+        'project_id',
+        'user_id',
+        'developer_id'
     ];
 
+    /**
+     * Get the project that the proposal belongs to.
+     */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
-    public function developer(): BelongsTo
+    /**
+     * Get the user (developer) that made the proposal.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the freelancer (developer) that made the proposal.
+     * This is kept for backward compatibility.
+     */
+    public function freelancer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'developer_id');
+    }
+
+    /**
+     * Get the client of the project.
+     */
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'project.user_id');
     }
 }

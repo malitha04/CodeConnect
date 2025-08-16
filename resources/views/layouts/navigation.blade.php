@@ -18,6 +18,18 @@
                 </div>
             </div>
 
+            <!-- Notification Bell -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <a href="{{ route('notifications.index') }}" class="relative p-2 text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-bell text-xl"></i>
+                    @if(Auth::user()->unreadNotifications->count() > 0)
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ Auth::user()->unreadNotifications->count() > 9 ? '9+' : Auth::user()->unreadNotifications->count() }}
+                        </span>
+                    @endif
+                </a>
+            </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

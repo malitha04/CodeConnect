@@ -63,14 +63,14 @@
     #messageBox.error { background-color: #ef4444; }
   </style>
 </head>
-<body class="font-inter bg-primary-dark text-text-primary flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen font-inter bg-primary-dark text-text-primary">
 
   <!-- Navbar -->
-  <nav class="fixed top-0 w-full bg-primary-dark/95 backdrop-blur-md border-b border-border-custom shadow-lg z-50">
-    <div class="container mx-auto px-4">
+  <nav class="fixed top-0 z-50 w-full border-b shadow-lg bg-primary-dark/95 backdrop-blur-md border-border-custom">
+    <div class="container px-4 mx-auto">
       <div class="flex items-center justify-between h-16">
-        <a href="index.html" class="text-2xl font-bold text-accent-green">
-            <i class="fas fa-code mr-2"></i>Code<span class="text-text-primary">Connect</span>
+        <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-accent-green">
+            <i class="mr-2 fas fa-code"></i>Code<span class="text-text-primary">Connect</span>
         </a>
       </div>
     </div>
@@ -80,70 +80,78 @@
   <div id="messageBox"></div>
 
   <!-- Main Content -->
-  <main class="flex-grow flex items-center justify-center py-12 px-4 mt-16">
+  <main class="flex items-center justify-center flex-grow px-4 py-12 mt-16">
     <div class="w-full max-w-lg">
-      <div class="bg-card-dark border border-border-custom rounded-2xl p-8 shadow-2xl animate-fade-in-up">
-        <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold mb-2">Join CodeConnect</h1>
+      <div class="p-8 border shadow-2xl bg-card-dark border-border-custom rounded-2xl animate-fade-in-up">
+        <div class="mb-8 text-center">
+          <h1 class="mb-2 text-3xl font-bold">Join CodeConnect</h1>
           <p class="text-text-secondary">Create your account to get started</p>
         </div>
 
         <div class="mb-6">
-          <p class="text-sm font-medium text-text-secondary mb-3 text-center">I want to:</p>
+          <p class="mb-3 text-sm font-medium text-center text-text-secondary">I want to:</p>
           <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="account-type-btn flex flex-col items-center p-4 border rounded-lg bg-secondary-dark hover:border-accent-green transition-all duration-300" onclick="selectAccountType(this, 'developer')" id="developer-btn">
-              <i class="fas fa-code text-accent-green text-xl mb-2"></i>
+            <button type="button" class="flex flex-col items-center p-4 transition-all duration-300 border rounded-lg account-type-btn bg-secondary-dark hover:border-accent-green" onclick="selectAccountType(this, 'Developer')" id="developer-btn">
+              <i class="mb-2 text-xl fas fa-code text-accent-green"></i>
               <span class="text-sm font-medium">Work as a Developer</span>
             </button>
-            <button type="button" class="account-type-btn flex flex-col items-center p-4 border rounded-lg bg-secondary-dark hover:border-accent-green transition-all duration-300" onclick="selectAccountType(this, 'client')" id="client-btn">
-              <i class="fas fa-briefcase text-accent-green text-xl mb-2"></i>
+            <button type="button" class="flex flex-col items-center p-4 transition-all duration-300 border rounded-lg account-type-btn bg-secondary-dark hover:border-accent-green" onclick="selectAccountType(this, 'Client')" id="client-btn">
+              <i class="mb-2 text-xl fas fa-briefcase text-accent-green"></i>
               <span class="text-sm font-medium">Hire a Developer</span>
             </button>
           </div>
         </div>
 
-        <form id="registerForm" class="space-y-6">
-          <input type="hidden" id="accountType" name="accountType" value="developer">
+        {{-- Laravel form for direct submission, removing the fetch API part --}}
+        <form method="POST" action="{{ route('register') }}" class="space-y-6" id="registerForm">
+          @csrf {{-- THIS IS THE CRITICAL ADDITION TO PREVENT 419 ERRORS --}}
+
+          {{-- The `name` attribute here needs to match what your backend expects, e.g., 'role' --}}
+          <input type="hidden" id="accountType" name="role" value="Developer">
+
           <div class="space-y-2">
-            <label for="fullName" class="block text-sm font-medium text-text-secondary">Full Name</label>
-            <input type="text" id="fullName" name="fullName" required class="w-full pl-4 pr-4 py-3 bg-secondary-dark border border-border-custom rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green transition-colors" placeholder="Enter your full name">
+            <label for="name" class="block text-sm font-medium text-text-secondary">Full Name</label>
+            {{-- The `name` attribute here needs to match what your backend expects, e.g., 'name' --}}
+            <input type="text" id="name" name="name" required class="w-full py-3 pl-4 pr-4 transition-colors border rounded-lg bg-secondary-dark border-border-custom text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green" placeholder="Enter your full name">
           </div>
           <div class="space-y-2">
             <label for="email" class="block text-sm font-medium text-text-secondary">Email Address</label>
-            <input type="email" id="email" name="email" required class="w-full pl-4 pr-4 py-3 bg-secondary-dark border border-border-custom rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green transition-colors" placeholder="Enter your email">
+            {{-- The `name` attribute here needs to match what your backend expects, e.g., 'email' --}}
+            <input type="email" id="email" name="email" required class="w-full py-3 pl-4 pr-4 transition-colors border rounded-lg bg-secondary-dark border-border-custom text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green" placeholder="Enter your email">
           </div>
           <div class="space-y-2">
             <label for="password" class="block text-sm font-medium text-text-secondary">Password</label>
             <div class="relative">
-              <input type="password" id="password" name="password" required minlength="8" class="w-full pl-4 pr-12 py-3 bg-secondary-dark border border-border-custom rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green transition-colors" placeholder="Create a password">
-              <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary" onclick="togglePasswordVisibility('password', 'password-toggle-icon')">
+              <input type="password" id="password" name="password" required minlength="8" class="w-full py-3 pl-4 pr-12 transition-colors border rounded-lg bg-secondary-dark border-border-custom text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green" placeholder="Create a password">
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-secondary" onclick="togglePasswordVisibility('password', 'password-toggle-icon')">
                 <i class="fas fa-eye" id="password-toggle-icon"></i>
               </button>
             </div>
           </div>
           <div class="space-y-2">
-            <label for="confirmPassword" class="block text-sm font-medium text-text-secondary">Confirm Password</label>
+            <label for="password_confirmation" class="block text-sm font-medium text-text-secondary">Confirm Password</label>
             <div class="relative">
-              <input type="password" id="confirmPassword" name="confirmPassword" required class="w-full pl-4 pr-12 py-3 bg-secondary-dark border border-border-custom rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green transition-colors" placeholder="Confirm your password">
-               <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary" onclick="togglePasswordVisibility('confirmPassword', 'confirm-password-toggle-icon')">
+              {{-- The `name` attribute must be `password_confirmation` for Laravel's default validation to work --}}
+              <input type="password" id="password_confirmation" name="password_confirmation" required class="w-full py-3 pl-4 pr-12 transition-colors border rounded-lg bg-secondary-dark border-border-custom text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-green" placeholder="Confirm your password">
+               <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-secondary" onclick="togglePasswordVisibility('password_confirmation', 'confirm-password-toggle-icon')">
                 <i class="fas fa-eye" id="confirm-password-toggle-icon"></i>
               </button>
             </div>
           </div>
           <div class="flex items-start">
-            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 mt-1 text-accent-green bg-secondary-dark border-border-custom rounded focus:ring-accent-green focus:ring-2">
+            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 mt-1 rounded text-accent-green bg-secondary-dark border-border-custom focus:ring-accent-green focus:ring-2">
             <label for="terms" class="ml-3 text-sm text-text-secondary">
               I agree to the <a href="#" class="text-accent-green hover:text-accent-green-hover">Terms of Service</a> and <a href="#" class="text-accent-green hover:text-accent-green-hover">Privacy Policy</a>
             </label>
           </div>
-          <button type="submit" id="submitBtn" class="w-full bg-accent-green hover:bg-accent-green-hover text-white py-3 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-xl">
-            <i class="fas fa-user-plus mr-2"></i>Create Account
+          <button type="submit" id="submitBtn" class="w-full py-3 font-semibold text-white transition-all duration-300 rounded-lg shadow-lg bg-accent-green hover:bg-accent-green-hover hover:-translate-y-1 hover:shadow-xl">
+            <i class="mr-2 fas fa-user-plus"></i>Create Account
           </button>
         </form>
         <div class="mt-8 text-center">
           <p class="text-text-secondary">
             Already have an account? 
-            <a href="login.html" class="text-accent-green hover:text-accent-green-hover font-medium transition-colors duration-300">
+            <a href="{{ route('login') }}" class="font-medium transition-colors duration-300 text-accent-green hover:text-accent-green-hover">
               Sign in here
             </a>
           </p>
@@ -190,60 +198,11 @@
             messageBox.style.display = 'none';
         }, 5000);
     }
-
-    // --- UPDATED: Handles the registration form submission with Fetch API ---
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        const form = event.target;
-        const submitBtn = document.getElementById('submitBtn');
-        const password = form.password.value;
-        const confirmPassword = form.confirmPassword.value;
-
-        // Basic frontend validation
-        if (password !== confirmPassword) {
-            showMessage('Passwords do not match.', 'error');
-            return;
-        }
-
-        // Disable button to prevent multiple submissions
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
-
-        const formData = new FormData(form);
-
-        // Send data to the backend script
-        fetch('register_process.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showMessage(data.message, 'success');
-                form.reset(); // Clear the form
-                // Optionally, redirect to the login page after a delay
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-            } else {
-                showMessage(data.message || 'An unknown error occurred.', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showMessage('A network error occurred. Please try again.', 'error');
-        })
-        .finally(() => {
-            // Re-enable the button
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Create Account';
-        });
-    });
-
+    
     // Set the default account type on page load
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('developer-btn').classList.add('active');
+      // The form will now submit directly to the server, so we're removing the custom JS fetch handler
     });
   </script>
 

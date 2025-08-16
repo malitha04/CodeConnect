@@ -78,11 +78,19 @@
                 </div>
                 <div class="border-t border-border-custom pt-4">
                     <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b332c1cf?w=40&h=40&fit=crop&crop=face" alt="Client" class="w-10 h-10 rounded-full mr-3">
+                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                            @if($project->client->avatar_url)
+                                <img src="{{ $project->client->avatar_url }}" alt="{{ $project->client->name }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full bg-accent-green flex items-center justify-center text-white font-bold text-lg">
+                                    {{ $project->client->initial }}
+                                </div>
+                            @endif
+                        </div>
                         <div>
                             <p class="font-medium">{{ $project->client->name }}</p>
                             <div class="flex items-center text-sm text-text-muted">
-                                <i class="fas fa-star text-yellow-400 mr-1"></i>4.9 (47 reviews)
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>{{ number_format($project->client->average_rating, 1) }} ({{ $project->client->total_reviews }} reviews)
                             </div>
                         </div>
                     </div>

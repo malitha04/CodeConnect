@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply bg-accent-green hover:bg-accent-green-hover text-white px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+    
+    .btn-secondary {
+        @apply bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium transition-colors border border-border-custom;
+    }
+    
+    .btn-danger {
+        @apply bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+    
+    .btn-success {
+        @apply bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+    
+    .btn-warning {
+        @apply bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+    
+    .btn-info {
+        @apply bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+    
+    /* File upload styling */
+    input[type="file"] {
+        @apply cursor-pointer;
+    }
+    
+    input[type="file"]::-webkit-file-upload-button {
+        @apply bg-accent-green hover:bg-accent-green-hover text-white font-medium py-2 px-4 rounded-lg border-0 cursor-pointer transition-colors;
+    }
+    
+    input[type="file"]::-moz-file-upload-button {
+        @apply bg-accent-green hover:bg-accent-green-hover text-white font-medium py-2 px-4 rounded-lg border-0 cursor-pointer transition-colors;
+    }
+}

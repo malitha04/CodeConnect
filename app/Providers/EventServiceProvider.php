@@ -15,7 +15,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
-            AssignDefaultRole::class,
         ],
     ];
 

@@ -3,67 +3,115 @@
 @section('title', 'Post a New Project')
 
 @section('content')
-    <h1 class="text-3xl font-bold mb-6">Post a New Project</h1>
-
-    <form method="POST" action="{{ route('projects.store') }}" class="space-y-6 bg-card-dark border border-border-custom rounded-xl p-6 max-w-4xl">
-        @csrf
-
-        <!-- Project Title -->
-        <div>
-            <label for="title" class="block text-sm font-medium mb-2">Project Title</label>
-            <input type="text" id="title" name="title" value="{{ old('title') }}" required placeholder="e.g. Build a React SaaS Dashboard" class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 placeholder-text-muted focus:ring-2 focus:ring-accent-green focus:outline-none">
-            @error('title')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        <!-- Description -->
-        <div>
-            <label for="description" class="block text-sm font-medium mb-2">Project Description</label>
-            <textarea id="description" name="description" rows="6" required placeholder="Describe the scope, features, expectations..." class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 placeholder-text-muted focus:ring-2 focus:ring-accent-green focus:outline-none">{{ old('description') }}</textarea>
-            @error('description')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        <!-- Category -->
-        <div>
-            <label for="category" class="block text-sm font-medium mb-2">Category</label>
-            <select id="category" name="category" required class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent-green focus:outline-none">
-                <option value="">Select a category</option>
-                <option @if(old('category') == 'Web Development') selected @endif>Web Development</option>
-                <option @if(old('category') == 'Mobile Development') selected @endif>Mobile Development</option>
-                <option @if(old('category') == 'UI/UX Design') selected @endif>UI/UX Design</option>
-                <option @if(old('category') == 'AI & Machine Learning') selected @endif>AI & Machine Learning</option>
-                <option @if(old('category') == 'DevOps') selected @endif>DevOps</option>
-                <option @if(old('category') == 'Data Science') selected @endif>Data Science</option>
-            </select>
-            @error('category')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        <!-- Budget & Duration -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label for="budget" class="block text-sm font-medium mb-2">Budget Range (USD)</label>
-                <input type="text" id="budget" name="budget" value="{{ old('budget') }}" required placeholder="e.g. $1000 - $3000" class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 placeholder-text-muted focus:ring-2 focus:ring-accent-green focus:outline-none">
-                @error('budget')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-card-dark border border-border-custom rounded-xl shadow-lg p-6 md:p-8">
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-3xl font-extrabold text-text-primary">Post a New Project</h1>
+                <a href="{{ route('projects.index') }}" class="text-text-secondary hover:text-text-primary transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to My Projects
+                </a>
             </div>
-            <div>
-                <label for="duration" class="block text-sm font-medium mb-2">Estimated Duration</label>
-                <input type="text" id="duration" name="duration" value="{{ old('duration') }}" required placeholder="e.g. 4-6 weeks" class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 placeholder-text-muted focus:ring-2 focus:ring-accent-green focus:outline-none">
-                @error('duration')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-        </div>
 
-        <!-- Skills -->
-        <div>
-            <label for="skills" class="block text-sm font-medium mb-2">Required Skills (Optional)</label>
-            <input type="text" id="skills" name="skills" value="{{ old('skills') }}" placeholder="e.g. React, Node.js, MongoDB" class="w-full bg-secondary-dark border border-border-custom text-text-primary rounded-lg px-4 py-3 placeholder-text-muted focus:ring-2 focus:ring-accent-green focus:outline-none">
-            <p class="text-xs text-text-muted mt-1">Separate skills with commas</p>
-            @error('skills')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
+            {{-- Display All Validation Errors --}}
+            @if ($errors->any())
+                <div class="bg-red-500/20 border border-red-500 text-red-300 rounded-lg p-4 mb-6">
+                    <div class="font-bold mb-2">Please correct the following errors:</div>
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <!-- Submit -->
-        <div class="pt-4">
-            <button type="submit" class="bg-accent-green hover:bg-accent-green-hover text-white font-medium px-6 py-3 rounded-lg transition">
-                <i class="fas fa-paper-plane mr-2"></i>Post Project
-            </button>
+            <form action="{{ route('projects.store') }}" method="POST" class="space-y-6">
+                @csrf
+                {{-- Project Title --}}
+                <div>
+                    <label for="title" class="block text-text-primary text-sm font-medium mb-2">Project Title</label>
+                    <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                           class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">
+                    @error('title')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Description --}}
+                <div>
+                    <label for="description" class="block text-text-primary text-sm font-medium mb-2">Project Description</label>
+                    <textarea name="description" id="description" rows="6" required
+                              class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Category --}}
+                <div>
+                    <label for="category" class="block text-text-primary text-sm font-medium mb-2">Category</label>
+                    <select name="category" id="category" required
+                            class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary transition-colors">
+                        <option value="" disabled {{ old('category') == '' ? 'selected' : '' }}>Select a category</option>
+                        <option value="Web Development" {{ old('category') == 'Web Development' ? 'selected' : '' }}>Web Development</option>
+                        <option value="Mobile Development" {{ old('category') == 'Mobile Development' ? 'selected' : '' }}>Mobile Development</option>
+                        <option value="UI/UX Design" {{ old('category') == 'UI/UX Design' ? 'selected' : '' }}>UI/UX Design</option>
+                        <option value="Graphic Design" {{ old('category') == 'Graphic Design' ? 'selected' : '' }}>Graphic Design</option>
+                        <option value="Writing & Translation" {{ old('category') == 'Writing & Translation' ? 'selected' : '' }}>Writing & Translation</option>
+                        <option value="Data Science" {{ old('category') == 'Data Science' ? 'selected' : '' }}>Data Science</option>
+                    </select>
+                    @error('category')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Duration --}}
+                <div>
+                    <label for="duration" class="block text-text-primary text-sm font-medium mb-2">Duration (in weeks)</label>
+                    <input type="number" name="duration" id="duration" value="{{ old('duration') }}" required min="1"
+                           class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">
+                    @error('duration')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Skills --}}
+                <div>
+                    <label for="skills" class="block text-text-primary text-sm font-medium mb-2">Required Skills (comma-separated)</label>
+                    <input type="text" name="skills" id="skills" value="{{ old('skills') }}" required
+                           class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">
+                    <p class="text-text-muted text-sm mt-1">e.g., HTML, CSS, JavaScript, React, Tailwind CSS</p>
+                    @error('skills')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Budget --}}
+                <div>
+                    <label for="budget" class="block text-text-primary text-sm font-medium mb-2">Budget ($)</label>
+                    <input type="number" name="budget" id="budget" value="{{ old('budget') }}" required min="1"
+                           class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">
+                    @error('budget')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Deadline --}}
+                <div>
+                    <label for="deadline" class="block text-text-primary text-sm font-medium mb-2">Deadline</label>
+                    <input type="date" name="deadline" id="deadline" value="{{ old('deadline') }}" required
+                           class="w-full p-3 bg-secondary-dark border border-border-custom rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-green text-text-primary placeholder-text-muted transition-colors">
+                    @error('deadline')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Submit Button --}}
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-accent-green hover:bg-accent-green-hover text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Post Project
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 @endsection

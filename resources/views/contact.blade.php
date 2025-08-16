@@ -30,7 +30,16 @@
             <!-- Contact Form -->
             <div class="bg-card-dark p-8 rounded-xl border border-border-custom shadow-2xl animate-fade-in-up" style="animation-delay: 0.2s;">
                 <h3 class="text-3xl font-bold mb-6 text-text-primary">Send us a Message</h3>
-                <form id="contactForm" method="POST" action="#" class="space-y-6">
+                
+                @if (session('success'))
+                    <div class="mb-6 p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <p class="text-green-500">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                @endif
+                <form id="contactForm" method="POST" action="{{ route('contact.store') }}" class="space-y-6">
                     @csrf
                     <div>
                         <label for="name" class="block text-sm font-medium text-text-secondary mb-2">Full Name</label>

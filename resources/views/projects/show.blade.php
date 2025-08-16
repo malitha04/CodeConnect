@@ -4,6 +4,20 @@
 
 @section('content')
     <div class="bg-card-dark border border-border-custom rounded-xl p-6 lg:p-8 max-w-4xl mx-auto">
+        <!-- Error Messages -->
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-600/20 border border-red-500/50 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                    <div>
+                        @foreach ($errors->all() as $error)
+                            <p class="text-red-500 text-sm">{{ $error }}</p>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row justify-between items-start mb-6 pb-6 border-b border-border-custom">
             <div>
@@ -54,14 +68,31 @@
 
                 {{-- Action buttons will differ based on user role --}}
                 @if(Auth::user()->hasRole('Developer'))
-                    {{-- THIS IS THE CORRECTED LINK --}}
-                    <a href="{{ route('proposals.create', $project) }}" class="w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-3 rounded-lg font-medium transition-colors block">
-                        Submit a Proposal
-                    </a>
-                @elseif(Auth::user()->id === $project->client_id)
-                    <a href="{{ route('projects.edit', $project) }}" class="w-full text-center bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium transition-colors border border-border-custom block">
+                    {{-- Check if user already has a proposal for this project --}}
+                    @if(!$project->proposals()->where('user_id', Auth::id())->exists())
+                        <a href="{{ route('proposals.create', $project) }}" class="w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-3 rounded-lg font-medium transition-colors block">
+                            Submit a Proposal
+                        </a>
+                    @else
+                        <div class="w-full text-center bg-secondary-dark text-text-secondary px-4 py-3 rounded-lg font-medium border border-border-custom">
+                            Proposal Already Submitted
+                        </div>
+                    @endif
+                @elseif(Auth::user()->id === $project->user_id)
+                    <a href="{{ route('projects.edit', $project) }}" class="w-full text-center bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium border border-border-custom block">
                         Edit Project
                     </a>
+                @endif
+
+                {{-- Message button for all authenticated users (except project owner) --}}
+                @if(Auth::id() !== $project->user_id)
+                    <form action="{{ route('inbox.start') }}" method="POST" class="w-full">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ $project->user_id }}">
+                        <button type="submit" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
+                            <i class="fas fa-envelope mr-2"></i>Message {{ $project->user->name }}
+                        </button>
+                    </form>
                 @endif
             </div>
         </div>

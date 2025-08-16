@@ -9,7 +9,7 @@
                 <p class="text-text-secondary">Sign in to your CodeConnect account</p>
             </div>
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-6">
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <!-- Email Address -->

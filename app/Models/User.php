@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture',
     ];
 
     /**
@@ -35,32 +37,164 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
-     * A User (Client) has many Projects.
+     * Get the projects for the client.
      */
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'client_id');
+        // Assuming 'user_id' is the foreign key on the projects table
+        return $this->hasMany(Project::class);
     }
 
     /**
-     * A User can be part of many Conversations.
-     * This checks if the user is either user_one or user_two in a conversation.
+     * Get the proposals for the developer.
+     * This is the relationship the DashboardController needs.
+     */
+    public function proposals(): HasMany
+    {
+        // 'user_id' is the foreign key on the proposals table
+        return $this->hasMany(Proposal::class);
+    }
+
+    /**
+     * Get conversations where the user is user_one
+     */
+    public function conversationsAsUserOne(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'user_one');
+    }
+
+    /**
+     * Get conversations where the user is user_two
+     */
+    public function conversationsAsUserTwo(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'user_two');
+    }
+
+    /**
+     * Get all conversations for the user
      */
     public function conversations()
     {
-        return Conversation::where('user_one', $this->id)->orWhere('user_two', $this->id);
+        return $this->conversationsAsUserOne()->union($this->conversationsAsUserTwo()->toBase());
+    }
+
+    /**
+     * Get all conversations with proper eager loading
+     */
+    public function getAllConversations()
+    {
+        $userOneConversations = $this->conversationsAsUserOne()->with(['messages', 'userTwo']);
+        $userTwoConversations = $this->conversationsAsUserTwo()->with(['messages', 'userOne']);
+        
+        return $userOneConversations->get()->concat($userTwoConversations->get());
+    }
+
+    /**
+     * Get the deliveries made by the developer.
+     */
+    public function deliveries(): HasMany
+    {
+        return $this->hasMany(ProjectDelivery::class, 'developer_id');
+    }
+
+    /**
+     * Get the reviews written by the user (as client).
+     */
+    public function reviewsWritten(): HasMany
+    {
+        return $this->hasMany(Review::class, 'client_id');
+    }
+
+    /**
+     * Get the reviews received by the user (as developer).
+     */
+    public function reviewsReceived(): HasMany
+    {
+        return $this->hasMany(Review::class, 'developer_id');
+    }
+
+    /**
+     * Get the average rating for the developer.
+     */
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviewsReceived()->published()->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get the total number of reviews for the developer.
+     */
+    public function getTotalReviewsAttribute()
+    {
+        return $this->reviewsReceived()->published()->count();
+    }
+
+    /**
+     * Get the payments made by the user (as client).
+     */
+    public function paymentsMade(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'client_id');
+    }
+
+    /**
+     * Get the payments received by the user (as developer).
+     */
+    public function paymentsReceived(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'developer_id');
+    }
+
+    /**
+     * Get the total earnings for the developer.
+     */
+    public function getTotalEarningsAttribute()
+    {
+        return $this->paymentsReceived()->completed()->sum('amount');
+    }
+
+    /**
+     * Get the profile picture URL.
+     */
+    public function getProfilePictureUrlAttribute()
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        
+        // Return null to indicate no profile picture (will use CSS fallback)
+        return null;
+    }
+
+    /**
+     * Get the profile picture URL for small avatars.
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        
+        // Return null to indicate no profile picture (will use CSS fallback)
+        return null;
+    }
+
+    /**
+     * Get the user's initial for avatar fallback.
+     */
+    public function getInitialAttribute()
+    {
+        return strtoupper(substr($this->name, 0, 1));
     }
 }
