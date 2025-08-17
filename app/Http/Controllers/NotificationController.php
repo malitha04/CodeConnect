@@ -48,4 +48,33 @@ class NotificationController extends Controller
         
         return response()->json(['count' => $count]);
     }
+
+    /**
+     * Return latest notifications as JSON for dropdowns (unread first).
+     */
+    public function feed(Request $request)
+    {
+        $user = Auth::user();
+
+        // Fetch unread first then read, limit 10 total
+        $unread = $user->unreadNotifications()->latest()->take(10)->get();
+        $remaining = max(0, 10 - $unread->count());
+        $read = $remaining > 0 ? $user->readNotifications()->latest()->take($remaining)->get() : collect();
+
+        $all = $unread->concat($read)->map(function ($n) {
+            return [
+                'id' => $n->id,
+                'type' => class_basename($n->type),
+                'data' => $n->data,
+                'read_at' => optional($n->read_at)->toIso8601String(),
+                'created_at' => $n->created_at->toIso8601String(),
+                'created_human' => $n->created_at->diffForHumans(),
+            ];
+        })->values();
+
+        return response()->json([
+            'items' => $all,
+            'unread_count' => $user->unreadNotifications()->count(),
+        ]);
+    }
 }

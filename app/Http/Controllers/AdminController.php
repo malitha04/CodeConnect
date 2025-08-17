@@ -329,7 +329,16 @@ class AdminController extends Controller
     public function contacts()
     {
         $contacts = Contact::latest()->paginate(10);
-        return view('admin.contacts.index', compact('contacts'));
+        
+        // Calculate statistics for the view
+        $stats = [
+            'total' => Contact::count(),
+            'unread' => Contact::unread()->count(),
+            'read' => Contact::read()->count(),
+            'replied' => Contact::replied()->count(),
+        ];
+        
+        return view('admin.contacts.index', compact('contacts', 'stats'));
     }
 
     /**
@@ -338,11 +347,249 @@ class AdminController extends Controller
     public function showContact(Contact $contact)
     {
         // Mark as read when viewed
-        if (!$contact->is_read) {
-            $contact->update(['is_read' => true]);
+        if ($contact->status === 'unread') {
+            $contact->update(['status' => 'read']);
         }
         
         return view('admin.contacts.show', compact('contact'));
+    }
+
+    /**
+     * Mark contact as read
+     */
+    public function markContactAsRead(Contact $contact)
+    {
+        $contact->update(['status' => 'read']);
+        return back()->with('success', 'Message marked as read.');
+    }
+
+    /**
+     * Delete contact message
+     */
+    public function deleteContact(Contact $contact)
+    {
+        $contact->delete();
+        return back()->with('success', 'Message deleted successfully.');
+    }
+
+    /**
+     * Reply to contact message
+     */
+    public function replyToContact(Request $request, Contact $contact)
+    {
+        $request->validate([
+            'reply' => 'required|string|max:2000',
+        ]);
+
+        $contact->update([
+            'status' => 'replied',
+            'admin_reply' => $request->reply,
+            'replied_at' => now(),
+        ]);
+
+        return back()->with('success', 'Reply sent successfully.');
+    }
+
+    /**
+     * Export users data as CSV
+     */
+    public function exportUsers()
+    {
+        $users = User::with('roles')->get();
+        
+        $filename = 'users_export_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+        
+        $callback = function() use ($users) {
+            $file = fopen('php://output', 'w');
+            
+            // Add CSV headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Email',
+                'Role',
+                'Email Verified',
+                'Registration Date',
+                'Last Updated',
+                'Total Projects',
+                'Total Proposals',
+                'Total Reviews Given',
+                'Total Reviews Received',
+                'Total Payments Made',
+                'Total Payments Received'
+            ]);
+            
+            // Add user data
+            foreach ($users as $user) {
+                $role = $user->roles->first() ? $user->roles->first()->name : 'No Role';
+                
+                fputcsv($file, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $role,
+                    $user->email_verified_at ? 'Yes' : 'No',
+                    $user->created_at->format('Y-m-d H:i:s'),
+                    $user->updated_at->format('Y-m-d H:i:s'),
+                    $user->projects()->count(),
+                    $user->proposals()->count(),
+                    $user->reviewsWritten()->count(),
+                    $user->reviewsReceived()->count(),
+                    $user->paymentsMade()->count(),
+                    $user->paymentsReceived()->count()
+                ]);
+            }
+            
+            fclose($file);
+        };
+        
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export projects data as CSV
+     */
+    public function exportProjects()
+    {
+        $projects = Project::with(['user', 'proposals'])->get();
+
+        $filename = 'projects_export_' . date('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($projects) {
+            $file = fopen('php://output', 'w');
+
+            // CSV headers
+            fputcsv($file, [
+                'ID',
+                'Title',
+                'Client',
+                'Budget',
+                'Status',
+                'Proposals Count',
+                'Created At',
+                'Updated At'
+            ]);
+
+            foreach ($projects as $project) {
+                fputcsv($file, [
+                    $project->id,
+                    $project->title,
+                    optional($project->user)->name,
+                    $project->budget,
+                    $project->status,
+                    $project->proposals->count(),
+                    $project->created_at->format('Y-m-d H:i:s'),
+                    $project->updated_at->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export contact messages as CSV
+     */
+    public function exportContacts()
+    {
+        $contacts = Contact::all();
+
+        $filename = 'contacts_export_' . date('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($contacts) {
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Email',
+                'Subject',
+                'Message',
+                'Status',
+                'Created At',
+                'Replied At'
+            ]);
+
+            foreach ($contacts as $c) {
+                fputcsv($file, [
+                    $c->id,
+                    $c->name,
+                    $c->email,
+                    $c->subject,
+                    $c->message,
+                    $c->status,
+                    optional($c->created_at)->format('Y-m-d H:i:s'),
+                    optional($c->replied_at)->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export recent transactions (payments) as CSV
+     */
+    public function exportTransactions()
+    {
+        $payments = Payment::with(['project', 'client', 'developer'])->orderByDesc('created_at')->get();
+
+        $filename = 'transactions_export_' . date('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($payments) {
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'ID',
+                'Transaction ID',
+                'Project',
+                'Client',
+                'Developer',
+                'Amount',
+                'Status',
+                'Paid At',
+                'Created At'
+            ]);
+
+            foreach ($payments as $p) {
+                fputcsv($file, [
+                    $p->id,
+                    $p->transaction_id,
+                    optional($p->project)->title,
+                    optional($p->client)->name,
+                    optional($p->developer)->name,
+                    $p->amount,
+                    $p->status,
+                    optional($p->paid_at)->format('Y-m-d H:i:s'),
+                    optional($p->created_at)->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**

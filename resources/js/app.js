@@ -4,4 +4,16 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-Alpine.start();
+let __alpineStarted = false;
+const startAlpine = () => {
+  if (!__alpineStarted) {
+    Alpine.start();
+    __alpineStarted = true;
+  }
+};
+
+document.addEventListener('DOMContentLoaded', startAlpine);
+document.addEventListener('turbo:load', () => {
+  __alpineStarted = false;
+  startAlpine();
+});

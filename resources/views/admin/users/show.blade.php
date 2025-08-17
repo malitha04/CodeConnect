@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         tailwind.config = {
             theme: {
@@ -69,11 +70,11 @@
                     <button id="mobile-menu-btn" class="mr-4 text-text-primary md:hidden">
                         <i class="text-xl fas fa-bars"></i>
                     </button>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center text-2xl font-bold text-accent-green">
+                    <a href="{{ route('home') }}" class="flex items-center text-2xl font-bold text-accent-green">
                         <i class="mr-2 fas fa-code"></i>Code<span class="text-text-primary">Connect</span>
                     </a>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center gap-6 ms-auto">
                     @if(session('success'))
                         <div class="px-3 py-1 text-sm bg-green-500/20 text-green-400 rounded-lg">
                             {{ session('success') }}
@@ -84,14 +85,31 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <img src="{{ Auth::user()->avatar_url }}" class="w-8 h-8 rounded-full" alt="Admin Profile">
-                    <div class="hidden text-sm sm:block">
-                        <div class="font-medium">{{ Auth::user()->name }}</div>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="transition text-text-muted hover:text-accent-green">Sign Out</button>
-                        </form>
-                    </div>
+
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center border border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300">
+                                @php($avatar = Auth::user()->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name))
+                                <img src="{{ $avatar }}" alt="{{ Auth::user()->name }}" class="h-8 w-8 rounded-full object-cover" />
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <div class="px-4 py-2 text-sm text-gray-700">
+                                <div class="font-medium">{{ Auth::user()->name }}</div>
+                                <div class="text-gray-500">{{ __('Profile Type') }}: {{ Auth::user()->getRoleNames()->first() }}</div>
+                            </div>
+                            <x-dropdown-link :href="route('admin.settings')">
+                                {{ __('Settings') }}
+                            </x-dropdown-link>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
                 </div>
             </div>
         </div>

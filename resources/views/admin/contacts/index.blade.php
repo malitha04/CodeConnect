@@ -1,10 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-text-primary">Contact Messages</h1>
-        <p class="text-text-secondary mt-2">Manage and respond to messages from users.</p>
+<div>
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-text-primary">Contact Messages</h1>
+            <p class="text-text-secondary mt-2">Manage and respond to messages from users.</p>
+        </div>
+        <a href="{{ route('admin.contacts.export') }}" class="px-4 py-2 font-medium transition-colors rounded-lg bg-accent-green hover:bg-accent-green-hover text-white">
+            <i class="mr-2 fas fa-download"></i>Export Contacts
+        </a>
     </div>
 
     <!-- Statistics Cards -->

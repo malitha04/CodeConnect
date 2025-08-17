@@ -22,6 +22,9 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
 
 // 🔐 Authenticated Routes
 Route::middleware(['auth'])->group(function () {
@@ -37,15 +40,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+        Route::get('/users/export', [AdminController::class, 'exportUsers'])->name('users.export');
         Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');
         Route::get('/projects', [AdminController::class, 'projects'])->name('projects.index');
+        Route::get('/projects/export', [AdminController::class, 'exportProjects'])->name('projects.export');
         Route::get('/projects/{project}', [AdminController::class, 'showProject'])->name('projects.show');
         Route::delete('/projects/{project}', [AdminController::class, 'deleteProject'])->name('projects.delete');
         Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts.index');
+        Route::get('/contacts/export', [AdminController::class, 'exportContacts'])->name('contacts.export');
         Route::get('/contacts/{contact}', [AdminController::class, 'showContact'])->name('contacts.show');
+        Route::patch('/contacts/{contact}/read', [AdminController::class, 'markContactAsRead'])->name('contacts.read');
+        Route::delete('/contacts/{contact}', [AdminController::class, 'deleteContact'])->name('contacts.delete');
+        Route::post('/contacts/{contact}/reply', [AdminController::class, 'replyToContact'])->name('contacts.reply');
+
+        // Reports exports
+        Route::get('/reports/transactions/export', [AdminController::class, 'exportTransactions'])->name('reports.transactions.export');
     });
 
     // ⚙️ Settings
@@ -55,9 +67,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
     Route::post('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
     Route::delete('/settings/profile-picture', [SettingsController::class, 'removeProfilePicture'])->name('settings.remove-picture');
+    Route::delete('/settings/account', [SettingsController::class, 'destroy'])->name('settings.destroy');
 
     // 🔔 Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/feed', [NotificationController::class, 'feed'])->name('notifications.feed');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unreadCount');
     Route::patch('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
     Route::patch('/notifications/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 

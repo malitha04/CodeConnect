@@ -84,4 +84,36 @@ class SettingsController extends Controller
 
         return back()->with('success', 'Profile picture removed successfully!');
     }
+
+    /**
+     * Delete the authenticated user's account.
+     */
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        // Optional: validate password confirmation for safety
+        if ($request->filled('password')) {
+            if (!Hash::check($request->input('password'), $user->password)) {
+                return back()->with('error', 'Password is incorrect.')->withInput();
+            }
+        }
+
+        // Delete profile picture if present
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        // Log out before deleting user
+        Auth::logout();
+
+        // Delete user
+        $user->delete();
+
+        // Invalidate session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', 'Your account has been deleted.');
+    }
 }

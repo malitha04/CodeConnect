@@ -152,7 +152,7 @@
                     <a href="{{ route('projects.browse') }}" class="w-full bg-accent-green hover:bg-accent-green-hover text-white px-4 py-3 rounded-lg font-medium transition-colors block text-center">
                         <i class="fas fa-search mr-2"></i>Browse New Projects
                     </a>
-                    <a href="{{ route('profile.edit') }}" class="w-full bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium transition-colors border border-border-custom block text-center">
+                    <a href="{{ route('settings.index') }}" class="w-full bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium transition-colors border border-border-custom block text-center">
                         <i class="fas fa-edit mr-2"></i>Update Profile
                     </a>
                     <a href="{{ route('deliveries.index') }}" class="w-full bg-secondary-dark hover:bg-card-dark text-text-primary px-4 py-3 rounded-lg font-medium transition-colors border border-border-custom block text-center">

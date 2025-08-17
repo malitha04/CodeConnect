@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background:#0f0f0f;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,9 +30,15 @@
       }
     }
   </script>
-  <style>html { scroll-behavior: smooth; }</style>
+  <style>
+    html { scroll-behavior: smooth; background: #0f0f0f; }
+    /* Fallback to prevent flash before Tailwind/Vite CSS applies */
+    body { background: #0f0f0f; color: #ffffff; }
+  </style>
+  <!-- Hotwire Turbo for SPA-like navigation -->
+  <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.min.js" data-turbo-track="reload"></script>
 </head>
-<body class="font-inter bg-primary-dark text-text-primary leading-relaxed">
+<body class="font-inter bg-primary-dark text-text-primary leading-relaxed" style="background:#0f0f0f;color:#ffffff;">
 
   <!-- Navbar -->
   <nav class="fixed top-0 w-full bg-primary-dark/95 backdrop-blur-md border-b border-border-custom shadow-lg z-50">
@@ -111,6 +117,7 @@
           <ul class="space-y-2 text-text-secondary">
             <li><a href="{{ route('about') }}" class="hover:text-accent-green transition-colors">About Us</a></li>
             <li><a href="{{ route('contact') }}" class="hover:text-accent-green transition-colors">Contact</a></li>
+            <li><a href="{{ route('privacy') }}" class="hover:text-accent-green transition-colors">Privacy Policy</a></li>
           </ul>
         </div>
       </div>
@@ -120,10 +127,14 @@
     </div>
   </footer>
 
+  <!-- Cookie Consent -->
+  @include('components.cookie-consent')
+
   <script>
     function toggleMobileMenu() {
       document.getElementById('mobileMenu').classList.toggle('hidden');
     }
   </script>
+  <script src="{{ asset('js/cookie-manager.js') }}"></script>
 </body>
 </html>

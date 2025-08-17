@@ -36,7 +36,12 @@
             }
         }
     </script>
+    <!-- Hotwire Turbo for SPA-like navigation -->
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.min.js" data-turbo-track="reload"></script>
     <style>
+        html { background: #0f0f0f; }
+        /* Fallback to prevent flash before Tailwind CSS applies */
+        body { background: #0f0f0f; color: #ffffff; }
         /* Custom scrollbar for a better dark mode experience */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }

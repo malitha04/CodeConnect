@@ -1,66 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="min-h-screen bg-primary-dark text-text-primary">
-    <!-- Top Navigation -->
-    <nav class="sticky top-0 z-30 border-b bg-primary-darker border-border-custom">
-        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center text-2xl font-bold text-accent-green">
-                        <i class="mr-2 fas fa-code"></i>Code<span class="text-text-primary">Connect</span>
-                    </a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    @if(session('success'))
-                        <div class="px-3 py-1 text-sm bg-green-500/20 text-green-400 rounded-lg">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    @if(session('error'))
-                        <div class="px-3 py-1 text-sm bg-red-500/20 text-red-400 rounded-lg">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                    <img src="{{ Auth::user()->avatar_url }}" class="w-8 h-8 rounded-full" alt="Admin Profile">
-                    <div class="hidden text-sm sm:block">
-                        <div class="font-medium">{{ Auth::user()->name }}</div>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="transition text-text-muted hover:text-accent-green">Sign Out</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="relative flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-secondary-dark border-r border-border-custom min-h-screen sticky top-16">
-            <div class="p-4">
-                <nav class="space-y-2">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 font-medium rounded-lg text-text-secondary hover:text-text-primary hover:bg-card-dark">
-                        <i class="mr-3 fas fa-tachometer-alt fa-fw"></i>Dashboard
-                    </a>
-                    <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-3 transition rounded-lg text-text-secondary hover:text-text-primary hover:bg-card-dark">
-                        <i class="mr-3 fas fa-users fa-fw"></i>Manage Users
-                    </a>
-                    <a href="{{ route('admin.projects.index') }}" class="flex items-center px-4 py-3 font-medium rounded-lg text-accent-green bg-card-dark">
-                        <i class="mr-3 fas fa-briefcase fa-fw"></i>Manage Projects
-                    </a>
-                    <a href="#reports" class="flex items-center px-4 py-3 transition rounded-lg text-text-secondary hover:text-text-primary hover:bg-card-dark">
-                        <i class="mr-3 fas fa-chart-line fa-fw"></i>Reports
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 transition rounded-lg text-text-secondary hover:text-text-primary hover:bg-card-dark">
-                        <i class="mr-3 fas fa-cog fa-fw"></i>Settings
-                    </a>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 p-6 overflow-x-hidden">
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-3xl font-bold">Project Details</h1>
                 <div class="flex items-center space-x-4">
@@ -271,17 +211,4 @@
                     </div>
                 </div>
             @endif
-        </main>
-    </div>
-</div>
-
-<script>
-    // Auto-hide success/error messages after 5 seconds
-    setTimeout(() => {
-        const messages = document.querySelectorAll('[class*="bg-green-500"], [class*="bg-red-500"]');
-        messages.forEach(msg => {
-            msg.style.display = 'none';
-        });
-    }, 5000);
-</script>
 @endsection

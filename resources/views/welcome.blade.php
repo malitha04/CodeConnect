@@ -28,17 +28,17 @@
               placeholder="e.g., React developer, AI chatbot..."
               class="flex-1 px-4 py-3 text-gray-800 rounded-lg outline-none"
             >
-            <button class="bg-accent-green hover:bg-accent-green-hover text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center">
+            <button class="bg-accent-green hover:bg-accent-green-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-500 ease-in-out flex items-center justify-center">
               <i class="fas fa-search mr-2"></i>Search
             </button>
           </div>
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="{{ route('register') }}" class="bg-accent-green hover:bg-accent-green-hover text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-1 text-center">
+            <a href="{{ route('register') }}" class="bg-accent-green hover:bg-accent-green-hover text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-500 ease-in-out hover:-translate-y-1 text-center">
               <i class="fas fa-user-plus mr-2"></i>Join as Developer
             </a>
-            <a href="#projects" class="border-2 border-accent-green text-accent-green hover:bg-accent-green hover:text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-1 text-center">
+            <a href="{{ route('register') }}" class="border-2 border-accent-green text-accent-green hover:bg-accent-green hover:text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-500 ease-in-out hover:-translate-y-1 text-center">
               <i class="fas fa-plus mr-2"></i>Post a Project
             </a>
           </div>
@@ -84,32 +84,32 @@
     <div class="container mx-auto px-4">
       <h2 class="text-4xl font-bold text-center mb-12">Popular Categories</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transform-gpu transition-transform duration-500 ease-in-out">
             <i class="fas fa-globe text-2xl text-white"></i>
           </div>
           <h5 class="text-xl font-semibold mb-2">Web Development</h5>
           <p class="text-text-secondary">Full-stack, frontend & backend.</p>
         </div>
 
-        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500 ease-in-out">
             <i class="fas fa-mobile-alt text-2xl text-white"></i>
           </div>
           <h5 class="text-xl font-semibold mb-2">Mobile Apps</h5>
           <p class="text-text-secondary">iOS, Android, and cross-platform.</p>
         </div>
 
-        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500 ease-in-out">
             <i class="fas fa-brain text-2xl text-white"></i>
           </div>
           <h5 class="text-xl font-semibold mb-2">AI & ML</h5>
           <p class="text-text-secondary">Data science, machine learning & AI.</p>
         </div>
 
-        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-8 text-center group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <div class="w-16 h-16 bg-accent-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500 ease-in-out">
             <i class="fas fa-link text-2xl text-white"></i>
           </div>
           <h5 class="text-xl font-semibold mb-2">Blockchain</h5>
@@ -125,8 +125,8 @@
       <h2 class="text-4xl font-bold text-center mb-12">Top Rated Developers</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Developer Card 1 -->
-        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
+        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex justify-between items-start">
               <h5 class="text-xl font-semibold mb-1">Alex Chen</h5>
@@ -139,15 +139,15 @@
                 </div>
                 <span class="text-accent-green font-bold text-lg">From $50/hr</span>
             </div>
-             <a href="#" class="mt-4 block w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300">
+             <a href="#" class="mt-4 block w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-2 rounded-lg font-medium transition-colors duration-500 ease-in-out">
                 View Profile
               </a>
           </div>
         </div>
 
         <!-- Developer Card 2 -->
-        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1494790108755-2616b332c1cf?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
+        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
           <div class="p-6">
              <div class="flex justify-between items-start">
                 <h5 class="text-xl font-semibold mb-1">Sarah Kim</h5>
@@ -160,15 +160,15 @@
               </div>
               <span class="text-accent-green font-bold text-lg">From $75/hr</span>
             </div>
-            <a href="#" class="mt-4 block w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-2 rounded-lg font-medium transition-colors duration-300">
+            <a href="#" class="mt-4 block w-full text-center bg-accent-green hover:bg-accent-green-hover text-white px-4 py-2 rounded-lg font-medium transition-colors duration-500 ease-in-out">
                 View Profile
             </a>
           </div>
         </div>
 
         <!-- Developer Card 3 -->
-        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
+        <div class="bg-card-dark border border-border-custom rounded-xl overflow-hidden group hover:border-accent-green hover:-translate-y-1 transition-transform duration-500 ease-in-out hover:shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=200&fit=crop&crop=face" alt="Developer" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex justify-between items-start">
                 <h5 class="text-xl font-semibold mb-1">Marcus Johnson</h5>
@@ -196,7 +196,7 @@
       <h2 class="text-4xl font-bold text-center mb-12">Featured Projects</h2>
       <div class="grid lg:grid-cols-2 gap-8">
         <!-- Project Card 1 -->
-        <div class="bg-card-dark border border-border-custom rounded-xl p-6 group hover:border-accent-green hover:translate-x-2 transition-all duration-300 hover:shadow-xl flex flex-col">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-6 group hover:border-accent-green hover:translate-x-1 transition-transform duration-500 ease-in-out hover:shadow-xl flex flex-col">
           <div class="flex-grow">
             <div class="flex justify-between items-start mb-4">
               <h5 class="text-xl font-semibold w-3/4">E-commerce Platform Development</h5>
@@ -211,14 +211,14 @@
               <i class="fas fa-clock mr-1"></i> 2h ago
               <span class="ml-4"><i class="fas fa-user mr-1"></i> 12 proposals</span>
             </div>
-            <a href="#" class="bg-accent-green hover:bg-accent-green-hover text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300 whitespace-nowrap">
+            <a href="#" class="bg-accent-green hover:bg-accent-green-hover text-white px-6 py-2 rounded-lg font-medium transition-colors duration-500 ease-in-out whitespace-nowrap">
               Apply Now
             </a>
           </div>
         </div>
 
         <!-- Project Card 2 -->
-        <div class="bg-card-dark border border-border-custom rounded-xl p-6 group hover:border-accent-green hover:translate-x-2 transition-all duration-300 hover:shadow-xl flex flex-col">
+        <div class="bg-card-dark border border-border-custom rounded-xl p-6 group hover:border-accent-green hover:translate-x-1 transition-transform duration-500 ease-in-out hover:shadow-xl flex flex-col">
           <div class="flex-grow">
             <div class="flex justify-between items-start mb-4">
               <h5 class="text-xl font-semibold w-3/4">AI Chatbot for Customer Service</h5>

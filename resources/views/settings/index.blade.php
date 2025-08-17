@@ -39,12 +39,11 @@
                                 </div>
                             </div>
                             @if($user->profile_picture)
-                                <form method="POST" action="{{ route('settings.remove-picture') }}" class="mt-2">
-                                    @csrf
-                                    <button type="submit" class="text-sm text-red-400 hover:text-red-300">
+                                <div class="mt-2">
+                                    <button type="submit" form="remove-picture-form" class="text-sm text-red-400 hover:text-red-300">
                                         <i class="mr-1 fas fa-trash"></i>Remove current picture
                                     </button>
-                                </form>
+                                </div>
                             @endif
                         </div>
 
@@ -69,6 +68,12 @@
                         <button type="submit" class="w-full px-4 py-2 font-medium transition-colors rounded-lg bg-accent-green hover:bg-accent-green-hover text-text-primary">
                             <i class="mr-2 fas fa-save"></i>Update Profile
                         </button>
+                    </form>
+
+                    <!-- Hidden form for removing profile picture (DELETE) -->
+                    <form id="remove-picture-form" method="POST" action="{{ route('settings.remove-picture') }}" class="hidden">
+                        @csrf
+                        @method('DELETE')
                     </form>
                 </div>
 
@@ -142,6 +147,27 @@
                 </div>
             </div>
         </main>
+
+        <!-- Danger Zone: Delete Account -->
+        <div class="mt-6 p-6 border bg-card-dark border-border-custom rounded-xl">
+            <h2 class="mb-4 text-xl font-semibold text-red-400">Danger Zone</h2>
+            <p class="mb-4 text-text-secondary">Deleting your account is irreversible and will remove your profile and access permanently.</p>
+            <form method="POST" action="{{ route('settings.destroy') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                @csrf
+                @method('DELETE')
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 items-end">
+                    <div class="md:col-span-2">
+                        <label for="delete_password" class="block mb-2 text-sm font-medium text-text-secondary">Confirm Password (optional)</label>
+                        <input type="password" id="delete_password" name="password" class="w-full px-3 py-2 border rounded-lg bg-secondary-dark border-border-custom text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-green" placeholder="Enter password to confirm" />
+                    </div>
+                    <div class="md:col-span-1">
+                        <button type="submit" class="w-full px-4 py-2 font-medium transition-colors rounded-lg bg-red-600 hover:bg-red-700 text-white">
+                            <i class="mr-2 fas fa-user-slash"></i>Delete Account
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
 <script>
     // Auto-hide success/error messages after 5 seconds

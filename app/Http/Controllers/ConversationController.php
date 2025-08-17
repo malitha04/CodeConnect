@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use App\Notifications\MessageReceived;
 
 class ConversationController extends Controller
 {
@@ -129,6 +130,15 @@ class ConversationController extends Controller
 
         // Update conversation timestamp
         $conversation->touch();
+
+        // Determine recipient and send notification
+        $recipientId = $conversation->user_one === Auth::id() ? $conversation->user_two : $conversation->user_one;
+        if ($recipientId) {
+            $recipient = User::find($recipientId);
+            if ($recipient) {
+                $recipient->notify(new MessageReceived($conversation, $message));
+            }
+        }
 
         return response()->json([
             'message' => $message,
