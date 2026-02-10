@@ -1,6 +1,6 @@
 # CodeConnect
 
-**Production Collaboration & Project Management Platform**
+**Production Collaboration & Project Management Platform (AWS)**
 
 <p align="center">
   <strong>A modern, secure collaboration and project management platform deployed on AWS using a production-ready cloud architecture</strong>
@@ -128,6 +128,26 @@ Screenshots are available in the `docs/screenshots/` directory:
 - 🗄️ [RDS database available](docs/screenshots/rds-available.png)
 - 🔒 [RDS security group rules (SG-to-SG)](docs/screenshots/rds-security-group.png)
 - 🌐 [Live application in browser](docs/screenshots/app-live.png)
+
+## 🏗️ Project 2 – AWS VPC & Private RDS Architecture
+
+This project demonstrates a production-style AWS networking setup.
+
+### Architecture
+- Custom VPC (non-default)
+- Public subnet for application EC2
+- Private subnets across two Availability Zones
+- Internet Gateway and route tables
+- Private PostgreSQL RDS (no public access)
+- Security Group to Security Group access control
+
+### Key Highlights
+- RDS deployed in private subnets only
+- Database access restricted to application security group
+- Connectivity verified using SSL PostgreSQL client from EC2
+
+📁 Screenshots and diagrams are available in:
+`docs/project-2-networking/`
 
 ---
 
