@@ -150,7 +150,14 @@ This project demonstrates a production-style AWS networking setup.
 `docs/project-2-networking/`
 
 ---
+## Dockerized Setup
+
+The application can be started locally using Docker:
+
+```bash
+docker compose up --build
+
 
 <p align="center">
-  <strong>Built with ❤️ using Laravel, Vue.js, and AWS</strong>
+  <strong>Built  using Laravel, Vue.js, and AWS</strong>
 </p>
