@@ -156,8 +156,3 @@ The application can be started locally using Docker:
 
 ```bash
 docker compose up --build
-
-
-<p align="center">
-  <strong>Built  using Laravel, Vue.js, and AWS</strong>
-</p>
