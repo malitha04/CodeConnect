@@ -47,24 +47,3 @@ jobs:
             docker compose exec -T app php artisan view:cache
 
             echo "✅ Deploy finished"
-script: |
-  set -e
-  cd ${{ secrets.EC2_APP_DIR }}
-
-  echo "Pull latest main..."
-  git fetch --all
-  git reset --hard origin/main
-
-  echo "Rebuild + restart..."
-  docker compose up -d --build
-
-  echo "Install PHP deps..."
-  docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
-
-  echo "Laravel caches..."
-  docker compose exec -T app php artisan config:clear
-  docker compose exec -T app php artisan config:cache
-  docker compose exec -T app php artisan route:cache
-  docker compose exec -T app php artisan view:cache
-
-  echo "✅ Deploy finished"
