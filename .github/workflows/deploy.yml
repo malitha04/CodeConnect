@@ -1,3 +1,52 @@
+name: Deploy CodeConnect to EC2 (Docker Compose)
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Basic checks
+        run: |
+          test -f docker-compose.yml || test -f docker-compose.yaml
+          test -f artisan
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          timeout: 120s
+          command_timeout: 30m
+          script_stop: true
+          script: |
+            set -e
+            cd ${{ secrets.EC2_APP_DIR }}
+
+            echo "Pull latest main..."
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "Rebuild + restart..."
+            docker compose up -d --build
+
+            echo "Install PHP deps..."
+            docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "Laravel caches..."
+            docker compose exec -T app php artisan config:clear
+            docker compose exec -T app php artisan config:cache
+            docker compose exec -T app php artisan route:cache
+            docker compose exec -T app php artisan view:cache
+
+            echo "✅ Deploy finished"
 script: |
   set -e
   cd ${{ secrets.EC2_APP_DIR }}
