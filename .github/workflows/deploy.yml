@@ -1,53 +1,24 @@
-name: Deploy CodeConnect to EC2 (Docker Compose)
-
-on:
-  push:
-    branches: ["main"]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Basic checks
-        run: |
-          test -f docker-compose.yml || test -f docker-compose.yaml
-          test -f artisan
-
-      - name: Start SSH agent and add key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Add EC2 to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy on EC2
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
             set -e
             cd /home/ubuntu/codeconnect
 
-            echo "Pull latest main..."
+            echo 'Pull latest main...'
             git fetch --all
             git reset --hard origin/main
 
-            echo "Rebuild + restart..."
+            echo 'Rebuild + restart...'
             docker compose up -d --build
 
-            echo "Install PHP deps..."
+            echo 'Install PHP deps...'
             docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
 
-            echo "Laravel caches..."
+            echo 'Laravel caches...'
             docker compose exec -T app php artisan config:clear
             docker compose exec -T app php artisan config:cache
             docker compose exec -T app php artisan route:cache
             docker compose exec -T app php artisan view:cache
 
-            echo "✅ Deploy finished"
-          EOF
+            echo 'Deploy finished'
+          "
